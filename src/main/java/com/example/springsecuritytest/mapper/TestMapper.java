@@ -1,4 +1,4 @@
-package com.example.springsecuritytest.repository;
+package com.example.springsecuritytest.mapper;
 
 import org.apache.ibatis.annotations.Mapper;
 import org.springframework.stereotype.Repository;
@@ -8,6 +8,6 @@ import org.springframework.stereotype.Repository;
  */
 @Mapper
 @Repository
-public interface TestRepository {
+public interface TestMapper {
     String hello();
 }

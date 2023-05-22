@@ -1,6 +1,6 @@
 package com.example.springsecuritytest.service;
 
-import com.example.springsecuritytest.repository.TestRepository;
+import com.example.springsecuritytest.mapper.TestMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -10,9 +10,9 @@ import org.springframework.stereotype.Service;
 @Service
 @RequiredArgsConstructor
 public class TestService {
-    private final TestRepository testRepository;
+    private final TestMapper testMapper;
 
     public String hello() {
-        return testRepository.hello();
+        return testMapper.hello();
     }
 }
