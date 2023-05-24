@@ -2,6 +2,7 @@ package com.example.springsecuritytest.controller;
 
 import com.example.springsecuritytest.mapper.RoleMapper;
 import com.example.springsecuritytest.model.ERole;
+import com.example.springsecuritytest.model.User;
 import com.example.springsecuritytest.service.TestService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -23,9 +24,10 @@ public class TestController {
     private final RoleMapper roleMapper;
     @GetMapping("/hello")
     public String hello() {
-        log.info("byName > {}", roleMapper.findByName(ERole.ROLE_USER));
-        log.info("byName > {}", roleMapper.findByName(ERole.ROLE_MODERATOR));
-        log.info("byName > {}", roleMapper.findByName(ERole.ROLE_ADMIN));
+        log.info("byName > {}", roleMapper.selectRoleByName(ERole.ROLE_USER));
+        log.info("byName > {}", roleMapper.selectRoleByName(ERole.ROLE_MODERATOR));
+        log.info("byName > {}", roleMapper.selectRoleByName(ERole.ROLE_ADMIN));
+
         return "";
 //        return testService.hello();
     }
