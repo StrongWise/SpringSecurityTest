@@ -13,5 +13,7 @@ import java.util.Optional;
 @Mapper
 @Repository
 public interface RoleMapper {
-    Optional<Role> findByName(ERole name);
+    Optional<Role> selectRoleByName(ERole name);
+
+    void insertRole(Role role);
 }

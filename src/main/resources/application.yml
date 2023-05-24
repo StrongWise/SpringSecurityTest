@@ -5,3 +5,7 @@ spring:
     username: root
     password: m2makstp
     mapper-locations: classpath:/mapper/**/*.xml
+
+jwt:
+  secret: jwtSecretKey
+  expire: 86400000

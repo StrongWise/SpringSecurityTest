@@ -1,13 +1,12 @@
 package com.example.springsecuritytest.response;
 
-import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
-import lombok.RequiredArgsConstructor;
 
 import java.util.List;
 
 @Data
-@AllArgsConstructor
+@Builder
 public class JwtResponse {
   private String accessToken;
   private String tokenType = "Bearer";
