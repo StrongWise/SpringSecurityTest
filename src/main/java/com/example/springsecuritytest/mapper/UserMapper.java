@@ -14,7 +14,7 @@ import java.util.Optional;
 public interface UserMapper {
     Optional<User> selectUserByName(String username);
 
-    void insertUser(User user);
+    int insertUser(User user);
 
     Boolean isExistUser(String username);
 

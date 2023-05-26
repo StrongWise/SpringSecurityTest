@@ -3,6 +3,7 @@
 <mapper namespace="com.example.springsecuritytest.mapper.UserMapper">
 
     <select id="selectUserByName" resultType="com.example.springsecuritytest.model.Role">
+        -- UserMapper.selectUserByName
         SELECT id
              , email
              , password
@@ -11,12 +12,28 @@
          WHERE username = #{username}
     </select>
 
+    <insert id="insertUser" parameterType="com.example.springsecuritytest.model.User"
+        useGeneratedKeys="true" keyProperty="id">
+        -- UserMapper.insertUser
+        INSERT INTO users (
+            email
+          , password
+          , username
+        ) VALUES (
+            #{email}
+          , #{password}
+          , #{username}
+        )
+    </insert>
+
     <select id="isExistUser" resultType="boolean">
+        -- UserMapper.isExistUser
         SELECT EXISTS
                    (SELECT 1 FROM users WHERE username = #{username})
     </select>
 
     <select id="isExistEmail" resultType="boolean">
+        -- UserMapper.isExistEmail
         SELECT EXISTS
                    (SELECT 1 FROM users WHERE email = #{email})
     </select>

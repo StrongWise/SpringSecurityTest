@@ -3,6 +3,7 @@
 <mapper namespace="com.example.springsecuritytest.mapper.RoleMapper">
 
     <select id="selectRoleByName" resultType="com.example.springsecuritytest.model.Role">
+        -- RoleMapper.selectRoleByName
         SELECT id
              , name
           FROM roles

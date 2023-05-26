@@ -82,7 +82,6 @@ public class AuthController {
         }
 
         // Create new user's account
-
         User user = User.builder()
                 .username(signUpRequest.getUsername())
                 .email(signUpRequest.getEmail())
