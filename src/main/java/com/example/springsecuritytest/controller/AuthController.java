@@ -47,6 +47,7 @@ public class AuthController {
 
     @PostMapping("/signin")
     public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {
+        log.info("AuthController /signin");
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword()));
 
@@ -69,6 +70,7 @@ public class AuthController {
 
     @PostMapping("/signup")
     public ResponseEntity<?> registerUser(@Valid @RequestBody SignupRequest signUpRequest) {
+        log.info("AuthController /signup");
         if (userMapper.isExistUser(signUpRequest.getUsername())) {
             return ResponseEntity
                     .badRequest()
@@ -123,4 +125,11 @@ public class AuthController {
 
         return ResponseEntity.ok(new MessageResponse("User registered successfully!"));
     }
+
+    @GetMapping("/roles")
+    public ResponseEntity<?> getRoles() {
+        log.info("AuthController /roles");
+        return ResponseEntity.ok(roleMapper.selectRoles());
+    }
+
 }

@@ -1,5 +1,6 @@
 package com.example.springsecuritytest.service;
 
+import com.example.springsecuritytest.mapper.RoleMapper;
 import com.example.springsecuritytest.mapper.UserMapper;
 import com.example.springsecuritytest.mapper.UserRoleMapper;
 import com.example.springsecuritytest.model.Role;
@@ -20,6 +21,8 @@ import org.springframework.transaction.annotation.Transactional;
 public class UserService {
     private final UserMapper userMapper;
     private final UserRoleMapper userRoleMapper;
+    private final RoleMapper roleMapper;
+
     @Transactional
     public int saveUserInfo(User user) {
         int cnt = userMapper.insertUser(user);
@@ -30,5 +33,11 @@ public class UserService {
                     .build());
         }
         return cnt;
+    }
+
+    public User selectUserByName(String username) {
+        User user = userMapper.selectUserByName(username);
+        user.setRoles(roleMapper.selectUserRoleByUserId(user.getId()));
+        return user;
     }
 }

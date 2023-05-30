@@ -1,7 +1,5 @@
 package com.example.springsecuritytest.service;
 
-import com.example.springsecuritytest.mapper.UserMapper;
-import com.example.springsecuritytest.model.User;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -14,16 +12,13 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @RequiredArgsConstructor
 public class UserDetailsServiceImpl implements UserDetailsService {
-  private final UserMapper userMapper;
+  private final UserService userService;
 
   @Override
   @Transactional
   public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
     log.info(" 4. UserDetailsServiceImpl loadUserByUsername");
-    User user = userMapper.selectUserByName(username)
-        .orElseThrow(() -> new UsernameNotFoundException("User Not Found with username: " + username));
-
-    return UserDetailsImpl.build(user);
+    return UserDetailsImpl.build(userService.selectUserByName(username));
   }
 
 }
