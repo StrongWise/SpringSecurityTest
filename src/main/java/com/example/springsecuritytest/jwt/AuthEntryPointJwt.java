@@ -15,7 +15,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * description :
+ * description : Spring Security 인증 실패시 처리
  */
 @Slf4j
 @Component

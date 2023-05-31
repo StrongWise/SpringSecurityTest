@@ -18,6 +18,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
@@ -37,28 +38,40 @@ import java.util.stream.Collectors;
 @RequestMapping("/api/auth")
 @RequiredArgsConstructor
 public class AuthController {
+    // 인증 매니저
     private final AuthenticationManager authenticationManager;
-
     private final RoleMapper roleMapper;
     private final UserMapper userMapper;
     private final UserService userService;
     private final PasswordEncoder encoder;
     private final JwtUtils jwtUtils;
 
+    /**
+     * 사용자 로그인
+     */
     @PostMapping("/signin")
     public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {
         log.info("AuthController /signin");
-        Authentication authentication = authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword()));
 
+        // Username, password 로 인증 토큰 생성
+        UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword());
+        // 인증 토큰으로 인증 정보 생성
+        Authentication authentication = authenticationManager.authenticate(token);
+
+        // SecurityContext 에 인증 정보 등록
         SecurityContextHolder.getContext().setAuthentication(authentication);
+
+        // 인증 정보로 jwt 토큰 생성
         String jwt = jwtUtils.generateJwtToken(authentication);
 
+        // 인증정보에서 사용자 정보 조회
         UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
+        // 사용자 권한 조회
         List<String> roles = userDetails.getAuthorities().stream()
-                .map(item -> item.getAuthority())
+                .map(GrantedAuthority::getAuthority)
                 .collect(Collectors.toList());
 
+        // jwt accessToken 응답
         return ResponseEntity.ok(JwtResponse.builder()
                 .accessToken(jwt)
                 .id(userDetails.getId())
@@ -68,29 +81,43 @@ public class AuthController {
                 .build());
     }
 
+    /**
+     * 사용자 등록
+     */
     @PostMapping("/signup")
     public ResponseEntity<?> registerUser(@Valid @RequestBody SignupRequest signUpRequest) {
         log.info("AuthController /signup");
+        // username 중복체크
         if (userMapper.isExistUser(signUpRequest.getUsername())) {
             return ResponseEntity
                     .badRequest()
                     .body(new MessageResponse("Error: Username is already taken!"));
         }
 
+        // email 중복체크
         if (userMapper.isExistEmail(signUpRequest.getEmail())) {
             return ResponseEntity
                     .badRequest()
                     .body(new MessageResponse("Error: Email is already in use!"));
         }
 
-        // Create new user's account
+        // 새 계정 생성
         User user = User.builder()
                 .username(signUpRequest.getUsername())
                 .email(signUpRequest.getEmail())
                 .password(encoder.encode(signUpRequest.getPassword()))
+                .roles(createRoles(signUpRequest.getRole()))
                 .build();
 
-        Set<String> strRoles = signUpRequest.getRole();
+        // 새 계정 저장
+        userService.saveUserInfo(user);
+        return ResponseEntity.ok(new MessageResponse("User registered successfully!"));
+    }
+
+    /**
+     * 권한 생성
+     */
+    private Set<Role> createRoles(Set<String> strRoles) {
         Set<Role> roles = new HashSet<>();
 
         if (strRoles == null) {
@@ -119,15 +146,14 @@ public class AuthController {
                 }
             });
         }
-
-        user.setRoles(roles);
-        userService.saveUserInfo(user);
-
-        return ResponseEntity.ok(new MessageResponse("User registered successfully!"));
+        return roles;
     }
 
+    /**
+     * 권한 조회
+     */
     @GetMapping("/roles")
-    public ResponseEntity<?> getRoles() {
+    public ResponseEntity<?> createRoles() {
         log.info("AuthController /roles");
         return ResponseEntity.ok(roleMapper.selectRoles());
     }

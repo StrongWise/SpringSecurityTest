@@ -6,16 +6,20 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
+/**
+ * UserDetailsService 구현체
+ */
 @Slf4j
 @Service
 @RequiredArgsConstructor
 public class UserDetailsServiceImpl implements UserDetailsService {
   private final UserService userService;
 
+  /**
+   * Username 기반으로 User 검색
+   */
   @Override
-  @Transactional
   public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
     log.info(" 4. UserDetailsServiceImpl loadUserByUsername");
     return UserDetailsImpl.build(userService.selectUserByName(username));

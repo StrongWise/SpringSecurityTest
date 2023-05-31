@@ -19,6 +19,9 @@ public class JwtUtils {
   @Value("${jwt.expire}")
   private int jwtExpire;
 
+  /**
+   * jwt 토큰 생성
+   */
   public String generateJwtToken(Authentication authentication) {
 
     UserDetailsImpl userPrincipal = (UserDetailsImpl) authentication.getPrincipal();
@@ -31,11 +34,17 @@ public class JwtUtils {
         .compact();
   }
 
+  /**
+   * jwt 토큰으로 유저명 취득
+   */
   public String getUserNameFromJwtToken(String token) {
     log.info(" 3. JwtUtils getUserNameFromJwtToken");
     return Jwts.parser().setSigningKey(jwtSecret).parseClaimsJws(token).getBody().getSubject();
   }
 
+  /**
+   * jwt 토큰 검증
+   */
   public boolean validateJwtToken(String authToken) {
     log.info(" 2. JwtUtils validateJwtToken");
     try {

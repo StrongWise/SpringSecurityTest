@@ -13,6 +13,7 @@ jwt:
 
 logging:
   level:
+    org.apache.coyote.http11: debug
 #    com:
 #      zaxxer:
 #        hikari: INFO

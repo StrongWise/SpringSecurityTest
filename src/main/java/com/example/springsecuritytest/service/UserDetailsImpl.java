@@ -11,6 +11,9 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
+/**
+ * 유저(인증) 정보
+ */
 public class UserDetailsImpl implements UserDetails {
   private static final long serialVersionUID = 1L;
 

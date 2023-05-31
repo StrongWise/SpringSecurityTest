@@ -17,7 +17,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 /**
- * description :
+ * description : OncePerRequestFilter 는 리퀘스트당 단일 실행을 목표로 하는 기본 필터
  */
 @Slf4j
 public class AuthTokenFilter extends OncePerRequestFilter {
@@ -26,6 +26,9 @@ public class AuthTokenFilter extends OncePerRequestFilter {
     @Autowired
     private UserDetailsServiceImpl userDetailsService;
 
+    /**
+     * jwt 구문 분석 및 유효성 검사, 사용자 세부 정보 로드, 인증 확인 절차
+     */
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
@@ -52,6 +55,9 @@ public class AuthTokenFilter extends OncePerRequestFilter {
         filterChain.doFilter(request, response);
     }
 
+    /**
+     * jwt 구문 분석
+     */
     private String parseJwt(HttpServletRequest request) {
         String headerAuth = request.getHeader("Authorization");
 
